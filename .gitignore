@@ -1,0 +1,17 @@
+#node_modules
+/node_modules
+
+#packages
+/packages
+
+#lock files
+*.lock
+
+#log
+*.log
+
+#tmp
+*.tmp
+
+#DS_STORE
+.DS_Store
