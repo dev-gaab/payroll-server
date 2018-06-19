@@ -1,15 +1,17 @@
+// Express
 import * as express from "express";
-// const express = require('express');
-const db = require('../db');
+
+/**
+*	Controllers
+*/
+
+// usuario
+import UsuarioCtrl from "../controllers/UsuarioCtrl";
 
 const api = express.Router();
 
-api.get('/test', async (req, res) => {
+const usuarioCtrl = new UsuarioCtrl;
 
-    const { rows } = await db.query('SELECT * FROM usuario');
-    console.log(rows);
-    res.send(rows);
-    
-});
+api.get('/test', usuarioCtrl.login);
 
 module.exports = api;
