@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var jwt = require("jwt-simple");
 var moment = require("moment");
 var config_1 = require("../config");
-function createToken() {
+function createToken(id) {
     var payload = {
-        sub: 4,
+        sub: id,
         iat: moment().unix(),
         exp: moment().add(14, 'days').unix()
     };

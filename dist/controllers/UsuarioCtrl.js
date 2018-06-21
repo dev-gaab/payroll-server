@@ -14,8 +14,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -36,27 +36,87 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var services = require("../services");
+var Usuario_1 = require("../models/Usuario");
+var bcrypt = require("bcrypt");
+var saltRounds = 12;
 var UsuarioCtrl = /** @class */ (function () {
     function UsuarioCtrl() {
     }
-    UsuarioCtrl.prototype.register = function () {
+    UsuarioCtrl.prototype.register = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
+            var user, resp;
             return __generator(this, function (_a) {
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        user = new Usuario_1.default;
+                        user.username = req.body.username;
+                        user.nombre = req.body.nombre;
+                        user.apellido = req.body.apellido;
+                        user.rol = req.body.rol;
+                        user.estatus = 'habilitado';
+                        //encryptar la contraseña
+                        return [4 /*yield*/, bcrypt.hash(req.body.password, saltRounds)
+                                .then(function (hash) {
+                                user.password = hash;
+                            })
+                                .catch(function (err) {
+                                res.status(500).send({ message: "Error al hashear la contraseña." });
+                            })];
+                    case 1:
+                        //encryptar la contraseña
+                        _a.sent();
+                        return [4 /*yield*/, user.create()];
+                    case 2:
+                        resp = _a.sent();
+                        if (!resp) {
+                            res.status(500).send(resp);
+                        }
+                        res.status(200).send(resp);
+                        return [2 /*return*/];
+                }
             });
         });
     };
     UsuarioCtrl.prototype.login = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var resp;
+            var user, resp, pass, token, response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, services.createToken()];
+                    case 0:
+                        user = new Usuario_1.default;
+                        user.username = req.body.username;
+                        return [4 /*yield*/, user.login()];
                     case 1:
                         resp = _a.sent();
-                        console.log(resp);
-                        res.send(resp);
-                        return [2 /*return*/];
+                        if (resp.error) {
+                            res.status(500).send(resp.error);
+                            return [2 /*return*/];
+                        }
+                        if (resp == '') {
+                            res.status(200).send({ error: "Usuario incorrecto" });
+                            return [2 /*return*/];
+                        }
+                        return [4 /*yield*/, bcrypt.compare(req.body.password, resp[0].password)];
+                    case 2:
+                        pass = _a.sent();
+                        if (!(pass == true)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, services.createToken(resp[0].id)];
+                    case 3:
+                        token = _a.sent();
+                        response = {
+                            token: token,
+                            user: {
+                                nombre: resp[0].nombre,
+                                apellido: resp[0].apellido
+                            },
+                            message: "Login Correcto"
+                        };
+                        res.status(200).send(response);
+                        return [3 /*break*/, 5];
+                    case 4:
+                        res.status(200).send({ error: "Contraseña incorrecta" });
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
                 }
             });
         });

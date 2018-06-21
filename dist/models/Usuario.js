@@ -40,16 +40,17 @@ var Usuario = /** @class */ (function () {
     // ingresar un nuevo usuario
     Usuario.prototype.create = function () {
         var sql = {
-            text: 'INSERT INTO usuario(id, username, password, nombre, apellido, rol, estatus) VALUES (default, $1, $2,$3 $4, $5, $6) ',
+            text: 'INSERT INTO usuario(id, username, password, nombre, apellido, rol, estatus) VALUES (default, $1, $2, $3, $4, $5, $6) ',
             values: [this.username, this.password, this.nombre, this.apellido, this.rol, this.estatus]
         };
-        db.query(sql)
+        var resp = db.query(sql)
             .then(function (res) {
-            return res;
+            return { message: "Inserción exitosa" };
         })
             .catch(function (err) {
             return { error: err.stack };
         });
+        return resp;
     };
     // actualizar un usuario
     Usuario.prototype.update = function () {
@@ -57,7 +58,7 @@ var Usuario = /** @class */ (function () {
             text: 'UPDATE usuario SET nombre=$1, apellido=$2, rol=$3',
             values: [this.nombre, this.apellido, this.rol]
         };
-        db.query(sql)
+        var resp = db.query(sql)
             .then(function (res) {
             return res;
         })
@@ -83,7 +84,7 @@ var Usuario = /** @class */ (function () {
     Usuario.prototype.disable = function () {
         var sql = {
             text: 'UPDATE usuario SET estatus=$2 WHERE id=$1',
-            values: [this.id, 'deshabilitado']
+            values: [this.id, 'inhabilitado']
         };
         db.query(sql)
             .then(function (res) {
@@ -93,7 +94,21 @@ var Usuario = /** @class */ (function () {
             return { error: err.stack };
         });
     };
+    Usuario.prototype.login = function () {
+        var sql = {
+            text: 'SELECT * FROM usuario WHERE username=$1 AND estatus=$2',
+            values: [this.username, 'habilitado']
+        };
+        var resp = db.query(sql)
+            .then(function (res) {
+            return res.rows;
+        })
+            .catch(function (err) {
+            return { error: err.stack };
+        });
+        return resp;
+    };
     return Usuario;
 }());
-exports.Usuario = Usuario;
+exports.default = Usuario;
 //# sourceMappingURL=Usuario.js.map

@@ -15,6 +15,6 @@ export function isAuth(req, res, next) {
 		return res.status(401).send({ message: 'El Token ha expirado' });
 	}
 
-	req.user = payload.sub;
+	req.usId = payload.sub;
 	next();
 }
