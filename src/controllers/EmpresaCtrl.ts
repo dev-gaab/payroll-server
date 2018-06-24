@@ -5,6 +5,7 @@ export default class EmpresaCtrl {
 
 	// obtener todas las empresas
 	async index(req: express.Request, res: express.Response) {
+		
 		const empresa = new Empresa;
 		const data = await empresa.index();
 

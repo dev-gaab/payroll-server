@@ -1,16 +1,5 @@
 const db = require('../db');
 
-interface empresa {
-    rif: string;
-    razon_social: string;
-    direccion: string;
-    riesgo_ivss: string;
-    num_afiliacion_ivss: string;
-    num_afiliacion_faov: string;
-    num_afiliacion_inces: string;
-    fecha_afiliacion_ivss: string;
-};
-
 export default class Empresa {
 
     id: number;
@@ -24,16 +13,16 @@ export default class Empresa {
     fecha_afiliacion_ivss: string;
     estatus: string;
 
-    constructor(data?: empresa) {
+    constructor(data?: any) {
 
-        this.rif = data !== null ? data.rif : null;
-        this.razon_social = data !== null ? data.razon_social : null;
-        this.direccion = data !== null ? data.direccion : null;
-        this.riesgo_ivss = data !== null ? data.riesgo_ivss : null;
-        this.num_afiliacion_ivss = data !== null ? data.num_afiliacion_ivss : null;
-        this.num_afiliacion_faov = data !== null ? data.num_afiliacion_faov : null;
-        this.num_afiliacion_inces = data !== null ? data.num_afiliacion_inces : null;
-        this.fecha_afiliacion_ivss = data !== null ? data.fecha_afiliacion_ivss : null;
+        this.rif = data.rif !== null ? data.rif : null;
+        this.razon_social = data.razon_social !== null ? data.razon_social : null;
+        this.direccion = data.direccion !== null ? data.direccion : null;
+        this.riesgo_ivss = data.riesgo_ivss !== null ? data.riesgo_ivss : null;
+        this.num_afiliacion_ivss = data.num_ivss !== null ? data.num_ivss : null;
+        this.num_afiliacion_faov = data.num_faov !== null ? data.num_faov : null;
+        this.num_afiliacion_inces = data.num_inces !== null ? data.num_inces : null;
+        this.fecha_afiliacion_ivss = data.fecha_ivss !== null ? data.fecha_ivss : null;
 
     }
 
