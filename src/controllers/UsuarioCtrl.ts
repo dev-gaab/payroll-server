@@ -45,7 +45,7 @@ export default class UsuarioCtrl {
         user.username = req.body.username;
 
         const resp = await user.login();
-        
+
         if (resp.error) {
 
             res.status(500).send(resp.error);
@@ -54,13 +54,13 @@ export default class UsuarioCtrl {
 
         if (resp == '') {
 
-            res.status(200).send({ error: "Usuario incorrecto" });
+            res.status(200).send({ error: "Error en login" });
             return;
         }
 
         // se comparan las contraseñas
         const pass = await bcrypt.compare(req.body.password, resp[0].password);
-         
+
         // si la contraseña es correcta
 
         if (pass == true) {
@@ -81,8 +81,8 @@ export default class UsuarioCtrl {
 
         }else{ // si la contraseña es incorrecta..
 
-            res.status(200).send({ error: "Contraseña incorrecta" });
+            res.status(200).send({ error: "Error en login" });
         }
-    	
+
     }
 }
